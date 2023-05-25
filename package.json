@@ -1,0 +1,62 @@
+{
+  "name": "antd-materials",
+  "version": "0.1.0",
+  "description": "antd-materials",
+  "files": [
+    "demo/",
+    "es/",
+    "lib/",
+    "build",
+    "dist"
+  ],
+  "main": "lib/index.js",
+  "module": "es/index.js",
+  "stylePath": "style.js",
+  "scripts": {
+    "start": "build-scripts start",
+    "build": "build-scripts build",
+    "lowcode:dev": "build-scripts start --config ./build.lowcode.js",
+    "lowcode:build": "build-scripts build --config ./build.lowcode.js",
+    "test": "build-scripts test",
+    "prepublishOnly": "npm run build && npm run lowcode:build",
+    "eslint": "eslint --cache --ext .js,.jsx ./",
+    "eslint:fix": "npm run eslint -- --fix",
+    "stylelint": "stylelint \"**/*.{css,scss,less}\"",
+    "lint": "npm run eslint && npm run stylelint",
+    "f2elint-scan": "f2elint scan",
+    "f2elint-fix": "f2elint fix"
+  },
+  "keywords": [
+    "ice",
+    "react",
+    "component"
+  ],
+  "dependencies": {
+    "@alifd/next": "^1.25.27",
+    "@ant-design/pro-components": "^2.4.16",
+    "antd": "4.24.10",
+    "react": "^16.x",
+    "react-dom": "^16.x"
+  },
+  "devDependencies": {
+    "@alib/build-scripts": "^0.1.3",
+    "@alifd/build-plugin-lowcode": "^0.3.0",
+    "@alilc/build-plugin-alt": "^1.3.3",
+    "@types/react": "^16.9.13",
+    "@types/react-dom": "^16.9.4",
+    "build-plugin-component": "^1.0.0",
+    "build-plugin-fusion": "^0.1.0",
+    "build-plugin-moment-locales": "^0.1.0",
+    "f2elint": "^1.2.0"
+  },
+  "peerDependencies": {
+    "moment": "latest",
+    "react": "^16.x",
+    "react-dom": "^16.x"
+  },
+  "componentConfig": {
+    "materialSchema": "https://unpkg.com/@seada/antd-materials@1.0.0-rc.27/build/lowcode/assets-prod.json"
+  },
+  "license": "MIT",
+  "homepage": "https://unpkg.com/antd-materials@0.1.0/build/index.html"
+}

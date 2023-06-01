@@ -52,6 +52,15 @@ module.exports = {
                 urls: [`//g.alicdn.com/code/npm/@ali/ant-design-icons-cdn/4.5.0/index.umd.min.js`],
                 library: 'icons',
               },
+              {
+                package: 'antd',
+                version: '4.24.10',
+                urls: [
+                  '//g.alicdn.com/code/lib/antd/4.24.10/antd.min.js',
+                  '//g.alicdn.com/code/lib/antd/4.24.10/antd.min.css',
+                ],
+                library: 'antd',
+              },
             ],
             sort: {
               groupList: ['普通组件', '高级组件'],

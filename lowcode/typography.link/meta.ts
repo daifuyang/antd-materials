@@ -12,13 +12,12 @@ export default {
       title: { label: '内容', tip: '内容' },
       propType: 'string',
       defaultValue: '',
-      supportVariable: true,
     },
     {
       name: 'href',
       title: { label: '跳转链接', tip: '跳转链接' },
       propType: 'string',
-      defaultValue: '',
+      setter: ['PageSetter', 'StringSetter'],
     },
     {
       name: 'target',
@@ -29,6 +28,22 @@ export default {
       },
       defaultValue: '_self',
     },
+    {
+      name: 'disabled',
+      title: { label: '禁用', tip: '禁用' },
+      setter: 'BoolSetter',
+    },
   ],
-  configure: { supports: { style: true } },
+  configure: {
+    supports: {
+      events: [
+        {
+          name: 'onClick',
+          template:
+            "onClick(event,${extParams}){\n    // 点击按钮时的回调\n    console.log('onClick', event);\n  }\n",
+        },
+      ],
+      style: true,
+    },
+  },
 };

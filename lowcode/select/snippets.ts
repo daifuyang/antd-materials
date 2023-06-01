@@ -5,9 +5,7 @@ export default [
     schema: {
       componentName: 'Select',
       props: {
-        style: {
-          width: 200,
-        },
+        style: {},
         options: [
           {
             label: 'A',

@@ -9,107 +9,20 @@ export const snippets: Snippet[] = [
       props: {
         fixedHeader: true,
         header: {
-          title: '页面标题',
-          subTitle: '子标题',
-          extra: [
-            {
-              type: 'JSSlot',
-              value: [
-                {
-                  componentName: 'Button',
-                  props: {
-                    type: 'default',
-                    children: '次要按钮',
-                    __component_name: 'Button',
-                    htmlType: 'button',
-                    size: 'middle',
-                    shape: 'default',
-                    block: false,
-                    danger: false,
-                    ghost: false,
-                    disabled: false,
-                  },
-                },
-              ],
-            },
-            {
-              type: 'JSSlot',
-              value: [
-                {
-                  componentName: 'Button',
-                  props: {
-                    type: 'default',
-                    children: '次要按钮',
-                    __component_name: 'Button',
-                    htmlType: 'button',
-                    size: 'middle',
-                    shape: 'default',
-                    block: false,
-                    danger: false,
-                    ghost: false,
-                    disabled: false,
-                  },
-                },
-              ],
-            },
-            {
-              type: 'JSSlot',
-              value: [
-                {
-                  componentName: 'Button',
-                  props: {
-                    type: 'primary',
-                    children: '主要按钮',
-                    __component_name: 'Button',
-                    htmlType: 'button',
-                    size: 'middle',
-                    shape: 'default',
-                    block: false,
-                    danger: false,
-                    ghost: false,
-                    disabled: false,
-                  },
-                },
-              ],
-            },
-          ],
+          title: {
+            type: 'JSExpression',
+            value: 'this.state.name',
+          },
+          subTitle: '',
+          extra: [],
           breadcrumb: {
-            routes: [
-              {
-                path: '',
-                name: '一级页面',
-              },
-              {
-                path: '',
-                name: '二级页面',
-              },
-              {
-                path: '',
-                name: '当前页面',
-              },
-            ],
+            routes: {
+              type: 'JSExpression',
+              value: 'this.state.breadcrumb',
+            },
+            _unsafe_MixedSetter_routes_select: 'ExpressionSetter',
           },
         },
-        tabProps: {
-          type: 'editable-card',
-          hideAdd: true,
-        },
-        tabList: [
-          {
-            tab: '基本信息',
-            key: 'base',
-            closable: false,
-          },
-          {
-            tab: '详细信息',
-            key: 'info',
-          },
-          {
-            tab: '禁用',
-            key: '3',
-            disabled: true,
-          },
-        ],
       },
     },
   },

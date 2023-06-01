@@ -6,18 +6,23 @@ import { uuid } from '../index';
 export class BaseDialog extends Component<any> {
   state = {
     visible: this.props?.visible ?? false,
+    title: this.props?.title,
   };
 
-  show() {
+  show(params: any = {}) {
     return new Promise((resolve) => {
-      this.setState(
-        {
-          visible: true,
-        },
-        () => {
-          resolve(null);
-        },
-      );
+      const state: any = {
+        visible: true,
+      };
+
+      const { title } = params;
+      if (title) {
+        state.title = title;
+      }
+
+      this.setState(state, () => {
+        resolve(null);
+      });
     });
   }
 
@@ -46,6 +51,7 @@ export class BaseDialog extends Component<any> {
     };
 
     const innerProps: any = {
+      title: this.state.title,
       visible: this.state.visible,
       footer: this.props?.footer,
       onCancel,

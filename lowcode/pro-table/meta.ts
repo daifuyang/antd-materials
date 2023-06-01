@@ -7,7 +7,7 @@ const ProTableMeta: ComponentMetadata = {
   docUrl: '',
   screenshot: '',
   devMode: 'proCode',
-  // group: '高级组件',
+  group: '高级组件',
   category: '表格',
   configure: {
     props: [
@@ -25,10 +25,6 @@ const ProTableMeta: ComponentMetadata = {
                     {
                       name: 'title',
                       title: { label: '列标题', tip: 'title | 列标题' },
-                      propType: {
-                        type: 'oneOfType',
-                        value: ['string', 'func'],
-                      },
                       setter: [
                         'StringSetter',
                         {
@@ -178,15 +174,6 @@ const ProTableMeta: ComponentMetadata = {
                       setter: 'JsonSetter',
                     },
                     {
-                      name: 'renderTag',
-                      title: {
-                        label: '使用 Tag 渲染',
-                        tip: 'renderTag | 是否使用 Tag 渲染',
-                      },
-                      propType: 'bool',
-                      setter: 'BoolSetter',
-                    },
-                    {
                       name: 'valueEnum',
                       title: {
                         label: '枚举定义',
@@ -257,31 +244,6 @@ const ProTableMeta: ComponentMetadata = {
                       propType: 'bool',
                       setter: 'BoolSetter',
                     },
-                    // {
-                    //   name: 'valueEnum',
-                    //   title: {
-                    //     label: '枚举定义',
-                    //     tip: 'valueEnum | 值的枚举，会自动转化把值当成 key 来取出要显示的内容'
-                    //   },
-                    //   propType: 'object',
-                    //   setter: 'JsonSetter'
-                    // },
-                    // {
-                    //   title: {
-                    //     label: {
-                    //       type: 'i18n',
-                    //       'en-US': 'request',
-                    //       'zh-CN': '远程获取枚举'
-                    //     },
-                    //     tip: 'request | 远程获取枚举'
-                    //   },
-                    //   name: 'request',
-                    //   description: '远程获取枚举',
-                    //   setter: {
-                    //     componentName: 'FunctionSetter',
-                    //     isRequired: false
-                    //   }
-                    // },
                     {
                       name: 'align',
                       title: { label: '对齐方式', tip: 'align | 对齐方式' },
@@ -448,6 +410,87 @@ const ProTableMeta: ComponentMetadata = {
         },
       },
       {
+        title: '数据源',
+        display: 'block',
+        type: 'group',
+        items: [
+          {
+            name: 'dataSource',
+            title: { label: '表格数据', tip: 'dataSource | 表格数据' },
+            propType: 'object',
+            setter: 'JsonSetter',
+          },
+          {
+            title: {
+              label: {
+                type: 'i18n',
+                'en-US': 'request',
+                'zh-CN': '请求函数',
+              },
+              tip: 'request | 获得 dataSource 的方法',
+            },
+            name: 'request',
+            description: '请求函数',
+            setter: {
+              componentName: 'FunctionSetter',
+              isRequired: false,
+            },
+          },
+          {
+            title: {
+              label: {
+                type: 'i18n',
+                'en-US': 'manualRequest',
+                'zh-CN': '手动请求',
+              },
+              tip: 'manualRequest | 是否手动触发请求',
+            },
+            name: 'manualRequest',
+            description: '是否手动触发请求',
+            setter: {
+              componentName: 'BoolSetter',
+              isRequired: false,
+              initialValue: false,
+            },
+          },
+          {
+            name: 'loading',
+            title: { label: '加载中', tip: 'loading | 是否加载中' },
+            propType: 'bool',
+            setter: 'BoolSetter',
+          },
+          {
+            name: 'cardBordered',
+            title: {
+              label: '边框',
+              tip: 'cardBordered | Table 和 Search 外围 Card 组件的边框',
+            },
+            propType: 'bool',
+            setter: 'BoolSetter',
+          },
+          {
+            name: 'rowKey',
+            title: {
+              label: '行Key',
+              tip: 'rowKey | 表格行 key 的取值，可以是字符串或一个函数',
+            },
+            propType: { type: 'oneOfType', value: ['string', 'func'] },
+            setter: [
+              'StringSetter',
+              {
+                componentName: 'FunctionSetter',
+                props: {
+                  template:
+                    'getRowKey(record,index,${extParams}){\n// 通过函数获取表格行 key\nreturn record.id;\n}',
+                },
+              },
+              'VariableSetter',
+            ],
+            defaultValue: 'id',
+          },
+        ],
+      },
+      {
         title: '扩展',
         display: 'block',
         type: 'group',
@@ -483,6 +526,418 @@ const ProTableMeta: ComponentMetadata = {
                   ],
                 },
               },
+            },
+          },
+        ],
+      },
+      {
+        title: '分页',
+        display: 'block',
+        type: 'group',
+        items: [
+          {
+            name: 'pagination',
+            title: { label: '显示分页', tip: 'pagination | 显示分页' },
+            propType: 'bool',
+            setter: 'BoolSetter',
+            extraProps: {
+              setValue: (target, value) => {
+                if (value) {
+                  target.parent.setPropValue('pagination', {
+                    defaultPageSize: 10,
+                  });
+                }
+              },
+            },
+          },
+          {
+            name: 'pagination.defaultPageSize',
+            title: {
+              label: '每页条数',
+              tip: 'pagination.defaultPageSize | 默认每页条数',
+            },
+            propType: 'number',
+            setter: 'NumberSetter',
+            condition: {
+              type: 'JSFunction',
+              value: 'target => !!target.getProps().getPropValue("pagination")',
+            },
+          },
+          {
+            name: 'pagination.showSizeChanger',
+            title: {
+              label: '页数切换',
+              tip: 'pagination.showSizeChanger | 是否展示 pageSize 切换器',
+            },
+            propType: 'bool',
+            setter: 'BoolSetter',
+            defaultValue: false,
+            condition: {
+              type: 'JSFunction',
+              value: 'target => !!target.getProps().getPropValue("pagination")',
+            },
+          },
+          {
+            name: 'pagination.showQuickJumper',
+            title: {
+              label: '快速跳转',
+              tip: 'pagination.showQuickJumper | 是否可以快速跳转至某页',
+            },
+            propType: 'bool',
+            setter: 'BoolSetter',
+            defaultValue: false,
+            condition: {
+              type: 'JSFunction',
+              value: 'target => !!target.getProps().getPropValue("pagination")',
+            },
+          },
+          {
+            name: 'pagination.simple',
+            title: { label: '简单分页', tip: 'pagination.simple | 简单分页' },
+            propType: 'bool',
+            setter: 'BoolSetter',
+            defaultValue: false,
+            condition: {
+              type: 'JSFunction',
+              value: 'target => !!target.getProps().getPropValue("pagination")',
+            },
+          },
+          {
+            name: 'pagination.size',
+            title: { label: '分页尺寸', tip: 'pagination.size | 分页尺寸' },
+            propType: {
+              type: 'oneOf',
+              value: ['default', 'small'],
+            },
+            setter: [
+              {
+                componentName: 'RadioGroupSetter',
+                props: {
+                  options: [
+                    {
+                      title: '默认',
+                      value: 'default',
+                    },
+                    {
+                      title: '小',
+                      value: 'small',
+                    },
+                  ],
+                },
+              },
+              'VariableSetter',
+            ],
+            defaultValue: 'default',
+            condition: {
+              type: 'JSFunction',
+              value: 'target => !!target.getProps().getPropValue("pagination")',
+            },
+          },
+          {
+            name: 'pagination.position',
+            title: { label: '分页位置', tip: 'pagination.position | 分页位置' },
+            setter: {
+              componentName: 'ArraySetter',
+              props: {
+                itemSetter: {
+                  componentName: 'SelectSetter',
+                  props: {
+                    options: [
+                      {
+                        title: '上左',
+                        value: 'topLeft',
+                      },
+                      {
+                        title: '上中',
+                        value: 'topCenter',
+                      },
+                      {
+                        title: '上右',
+                        value: 'topRight',
+                      },
+                      {
+                        title: '下左',
+                        value: 'bottomLeft',
+                      },
+                      {
+                        title: '下中',
+                        value: 'bottomCenter',
+                      },
+                      {
+                        title: '下右',
+                        value: 'bottomRight',
+                      },
+                    ],
+                  },
+                  initialValue: 'bottomRight',
+                },
+              },
+            },
+            condition: {
+              type: 'JSFunction',
+              value: 'target => !!target.getProps().getPropValue("pagination")',
+            },
+          },
+        ],
+      },
+      {
+        title: '滚动',
+        display: 'block',
+        type: 'group',
+        items: [
+          {
+            name: 'scroll.scrollToFirstRowOnChange',
+            title: {
+              label: '自动滚动',
+              tip: 'scroll.scrollToFirstRowOnChange | 是否自动滚动到表格顶部',
+            },
+            propType: 'bool',
+            setter: 'BoolSetter',
+            defaultValue: true,
+          },
+          {
+            name: 'scroll.x',
+            title: {
+              label: '横向滚动',
+              tip: 'scroll.x | 	设置横向滚动，也可用于指定滚动区域的宽，可以设置为像素值，百分比，true 和 max-content',
+            },
+            propType: { type: 'oneOfType', value: ['number', 'bool'] },
+            setter: ['NumberSetter', 'BoolSetter', 'VariableSetter'],
+          },
+          {
+            name: 'scroll.y',
+            title: {
+              label: '纵向滚动',
+              tip: 'scroll.y | 	设置纵向滚动，也可用于指定滚动区域的高，可以设置为像素值',
+            },
+            propType: 'number',
+            setter: ['NumberSetter', 'VariableSetter'],
+          },
+        ],
+      },
+      {
+        title: '行选择器',
+        display: 'block',
+        type: 'group',
+        items: [
+          {
+            name: 'rowSelection',
+            title: { label: '行选择', tip: 'rowSelection | 行选择' },
+            propType: 'bool',
+            setter: 'BoolSetter',
+            defaultValue: false,
+            extraProps: {
+              setValue: (target, value) => {
+                if (value) {
+                  target.parent.setPropValue('rowSelection', {
+                    type: 'radio',
+                  });
+                }
+              },
+            },
+          },
+          {
+            name: 'rowSelection.type',
+            title: {
+              label: '行选择类型',
+              tip: 'rowSelection.type | 多选/单选',
+            },
+            propType: {
+              type: 'oneOf',
+              value: ['checkbox', 'radio'],
+            },
+            setter: [
+              {
+                componentName: 'RadioGroupSetter',
+                props: {
+                  options: [
+                    {
+                      title: '多选',
+                      value: 'checkbox',
+                    },
+                    {
+                      title: '单选',
+                      value: 'radio',
+                    },
+                  ],
+                },
+              },
+              'VariableSetter',
+            ],
+            condition: {
+              type: 'JSFunction',
+              value: 'target => !!target.getProps().getPropValue("rowSelection")',
+            },
+          },
+          {
+            name: 'rowSelection.preserveSelectedRowKeys',
+            title: {
+              label: '缓存选项',
+              tip: 'rowSelection.preserveSelectedRowKeys | 当数据被删除时仍然保留选项',
+            },
+            propType: 'bool',
+            setter: 'BoolSetter',
+            condition: {
+              type: 'JSFunction',
+              value: 'target => !!target.getProps().getPropValue("rowSelection")',
+            },
+          },
+          {
+            name: 'rowSelection.fixed',
+            title: {
+              label: '固定左边',
+              tip: 'rowSelection.fixed | 把选择框列固定在左边',
+            },
+            propType: 'bool',
+            setter: 'BoolSetter',
+            condition: {
+              type: 'JSFunction',
+              value: 'target => !!target.getProps().getPropValue("rowSelection")',
+            },
+          },
+          {
+            name: 'rowSelection.selectedRowKeys',
+            title: {
+              label: '选中行Key',
+              tip: 'rowSelection.selectedRowKeys | 指定选中项的 key 数组',
+            },
+            propType: 'object',
+            setter: 'JsonSetter',
+            condition: {
+              type: 'JSFunction',
+              value: 'target => !!target.getProps().getPropValue("rowSelection")',
+            },
+          },
+          {
+            name: 'rowSelection.getCheckboxProps',
+            title: {
+              label: '默认属性',
+              tip: 'rowSelection.getCheckboxProps | 选择框的默认属性配置',
+            },
+            propType: 'func',
+            setter: [
+              {
+                componentName: 'FunctionSetter',
+                props: {
+                  template:
+                    'getCheckboxProps(record,${extParams}){\n// 选择框的默认属性配置\nreturn { disabled: false };\n}',
+                },
+              },
+              'VariableSetter',
+            ],
+            condition: {
+              type: 'JSFunction',
+              value: 'target => !!target.getProps().getPropValue("rowSelection")',
+            },
+          },
+          {
+            name: 'rowSelection.onChange',
+            title: {
+              label: 'onChange',
+              tip: 'rowSelection.onChange | 选中项发生变化时的回调',
+            },
+            propType: 'func',
+            setter: [
+              {
+                componentName: 'FunctionSetter',
+                props: {
+                  template:
+                    'onChange(record,${extParams}){\n// 选择框的默认属性配置\nreturn { disabled: false };\n}',
+                },
+              },
+              'VariableSetter',
+            ],
+            condition: {
+              type: 'JSFunction',
+              value: 'target => !!target.getProps().getPropValue("rowSelection")',
+            },
+          },
+          {
+            name: 'rowSelection.onSelect',
+            title: {
+              label: 'onSelect',
+              tip: 'rowSelection.onSelect | 	用户手动选择/取消选择某行的回调',
+            },
+            propType: 'func',
+            setter: [
+              {
+                componentName: 'FunctionSetter',
+                props: {
+                  template:
+                    'onSelect(record,${extParams}){\n// 选择框的默认属性配置\nreturn { disabled: false };\n}',
+                },
+              },
+              'VariableSetter',
+            ],
+            condition: {
+              type: 'JSFunction',
+              value: 'target => !!target.getProps().getPropValue("rowSelection")',
+            },
+          },
+          {
+            name: 'rowSelection.onSelectAll',
+            title: {
+              label: 'onSelectAll',
+              tip: 'rowSelection.onSelectAll | 	用户手动选择/取消选择所有行的回调',
+            },
+            propType: 'func',
+            setter: [
+              {
+                componentName: 'FunctionSetter',
+                props: {
+                  template:
+                    'onSelectAll(record,${extParams}){\n// 选择框的默认属性配置\nreturn { disabled: false };\n}',
+                },
+              },
+              'VariableSetter',
+            ],
+            condition: {
+              type: 'JSFunction',
+              value: 'target => !!target.getProps().getPropValue("rowSelection")',
+            },
+          },
+          {
+            name: 'rowSelection.onSelectInvert',
+            title: {
+              label: 'onSelectInvert',
+              tip: 'rowSelection.onSelectInvert | 用户手动选择反选的回调',
+            },
+            propType: 'func',
+            setter: [
+              {
+                componentName: 'FunctionSetter',
+                props: {
+                  template:
+                    'onSelectInvert(record,${extParams}){\n// 选择框的默认属性配置\nreturn { disabled: false };\n}',
+                },
+              },
+              'VariableSetter',
+            ],
+            condition: {
+              type: 'JSFunction',
+              value: 'target => !!target.getProps().getPropValue("rowSelection")',
+            },
+          },
+          {
+            name: 'rowSelection.onSelectNone',
+            title: {
+              label: 'onSelectNone',
+              tip: 'rowSelection.onSelectNone | 用户清空选择的回调',
+            },
+            propType: 'func',
+            setter: [
+              {
+                componentName: 'FunctionSetter',
+                props: {
+                  template:
+                    'onSelectNone(record,${extParams}){\n// 选择框的默认属性配置\nreturn { disabled: false };\n}',
+                },
+              },
+              'VariableSetter',
+            ],
+            condition: {
+              type: 'JSFunction',
+              value: 'target => !!target.getProps().getPropValue("rowSelection")',
             },
           },
         ],

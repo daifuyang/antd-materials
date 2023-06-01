@@ -10,15 +10,13 @@ export default {
   props: [
     {
       name: 'ref',
-      title: {
-        label: 'ref',
-        tip: "ref | 通过 this.$('xxx') 获取到组件实例",
+      condition: () => false,
+      setter: (target) => {
+        if (!target?.getValue()) {
+          target?.setValue(`form-${target?.id}`);
+        }
+        return 'StringSetter';
       },
-      defaultValue: () => {
-        return `form_${uuid()}`;
-      },
-      setter: 'StringSetter',
-      supportVariable: true,
     },
     {
       name: 'values',

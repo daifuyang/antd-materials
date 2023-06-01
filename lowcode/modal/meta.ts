@@ -1,33 +1,71 @@
-import snippets from './snippets';
+import { snippets } from './snippets';
+import { uuid } from '../utils';
 
-export default {
-  snippets,
+const ProModalMeta = {
   componentName: 'Modal',
-  title: '对话框',
+  title: '模态框',
+  docUrl: '',
+  screenshot: '',
+  devMode: 'proCode',
   group: '基础组件',
   category: '反馈',
   props: [
     {
       name: 'title',
-      title: { label: '标题', tip: '标题' },
-      propType: { type: 'oneOfType', value: ['string', 'node'] },
+      title: '标题',
+      propType: 'string',
+      setter: ['StringSetter', 'VariableSetter'],
+    },
+    // {
+    //   name: 'width',
+    //   title: { label: '弹窗尺寸', tip: 'width | 弹窗尺寸' },
+    //   propType: {
+    //     type: 'oneOf',
+    //     value: [1080, 520, 250]
+    //   },
+    //   setter: [
+    //     {
+    //       componentName: 'RadioGroupSetter',
+    //       props: {
+    //         options: [
+    //           {
+    //             title: '大',
+    //             value: 1080
+    //           },
+    //           {
+    //             title: '中',
+    //             value: 520
+    //           },
+    //           {
+    //             title: '小',
+    //             value: 250
+    //           }
+    //         ]
+    //       }
+    //     },
+    //     'VariableSetter'
+    //   ],
+    //   defaultValue: 520
+    // },
+    {
+      name: 'width',
+      title: { label: '宽度', tip: 'width | 宽度' },
+      propType: { type: 'oneOfType', value: ['string', 'number'] },
+      setter: ['NumberSetter', 'StringSetter', 'VariableSetter'],
+      defaultValue: 520,
     },
     {
-      name: 'cancelText',
-      title: { label: '取消按钮文字', tip: '取消按钮文字' },
-      propType: { type: 'oneOfType', value: ['string', 'node'] },
+      name: 'mask',
+      title: { label: '显示遮罩', tip: 'mask | 显示遮罩' },
+      propType: 'bool',
+      setter: 'BoolSetter',
+      defaultValue: true,
     },
     {
-      name: 'okText',
-      title: { label: '确认按钮文字', tip: '确认按钮文字' },
-      propType: { type: 'oneOfType', value: ['string', 'node'] },
-    },
-    {
-      name: 'open',
+      name: 'visible',
       title: { label: '是否可见', tip: '对话框是否可见' },
       propType: 'bool',
       setter: 'BoolSetter',
-      supportVariable: true,
     },
     {
       name: 'centered',
@@ -35,7 +73,6 @@ export default {
       propType: 'bool',
       defaultValue: false,
       setter: 'BoolSetter',
-      supportVariable: true,
     },
     {
       name: 'closable',
@@ -43,12 +80,6 @@ export default {
       propType: 'bool',
       defaultValue: true,
       setter: 'BoolSetter',
-      supportVariable: true,
-    },
-    {
-      name: 'closeIcon',
-      title: { label: '关闭图标', tip: '自定义关闭图标' },
-      propType: 'node',
     },
     {
       name: 'confirmLoading',
@@ -56,7 +87,6 @@ export default {
       propType: 'bool',
       defaultValue: false,
       setter: 'BoolSetter',
-      supportVariable: true,
     },
     {
       name: 'destroyOnClose',
@@ -64,7 +94,6 @@ export default {
       propType: 'bool',
       defaultValue: false,
       setter: 'BoolSetter',
-      supportVariable: true,
     },
     {
       name: 'forceRender',
@@ -72,7 +101,6 @@ export default {
       propType: 'bool',
       defaultValue: false,
       setter: 'BoolSetter',
-      supportVariable: true,
     },
     {
       name: 'keyboard',
@@ -80,15 +108,6 @@ export default {
       propType: 'bool',
       defaultValue: true,
       setter: 'BoolSetter',
-      supportVariable: true,
-    },
-    {
-      name: 'mask',
-      title: { label: '是否展示遮罩', tip: '是否展示遮罩' },
-      propType: 'bool',
-      defaultValue: true,
-      setter: 'BoolSetter',
-      supportVariable: true,
     },
     {
       name: 'maskClosable',
@@ -96,116 +115,81 @@ export default {
       propType: 'bool',
       defaultValue: true,
       setter: 'BoolSetter',
-      supportVariable: true,
     },
     {
       name: 'zIndex',
       title: { label: 'z-index', tip: '设置 Modal 的 `z-index`' },
       propType: 'number',
       setter: 'NumberSetter',
-      supportVariable: true,
     },
-    {
-      name: 'width',
-      title: { label: '宽度', tip: '宽度' },
-      propType: { type: 'oneOfType', value: ['string', 'number'] },
-    },
-    {
-      name: 'footer',
-      title: {
-        label: '底部内容',
-        tip: '底部内容，当不需要默认底部按钮时，可以设为 `footer={null}`',
-      },
-      propType: { type: 'oneOfType', value: ['string', 'node'] },
-    },
-    {
-      name: 'okType',
-      title: { label: '确认按钮类型', tip: '确认按钮类型' },
-      propType: { type: 'oneOf', value: ['default', 'small'] },
-      setter: {
-        componentName: 'RadioGroupSetter',
-        props: {
-          options: [
-            {
-              title: 'primary',
-              value: 'primary',
-            },
-            {
-              title: 'ghost',
-              value: 'ghost',
-            },
-            {
-              title: 'dashed',
-              value: 'dashed',
-            },
-            {
-              title: 'link',
-              value: 'link',
-            },
-            {
-              title: 'text',
-              value: 'text',
-            },
-            {
-              title: 'default',
-              value: 'default',
-            },
-          ],
-        },
-      },
-    },
-    {
-      name: 'okButtonProps',
-      title: { label: '确认按钮props', tip: '确认按钮props' },
-      propType: 'object',
-      setter: {
-        componentName: 'ObjectSetter',
-        props: {
-          config: {
-            items: [
-              {
-                name: 'disabled',
-                title: { label: '是否可点击', tip: 'disabled' },
-                propType: 'bool',
-                setter: [
-                  {
-                    componentName: 'BoolSetter',
-
-                    initialValue: false,
-                  },
-                  'VariableSetter',
-                ],
-                isRequired: true,
-              },
-            ],
-          },
-        },
-      },
-    },
-    {
-      name: 'bodyStyle',
-      title: { label: 'body样式', tip: 'Modal body 样式' },
-      propType: 'object',
-    },
-    {
-      name: 'maskStyle',
-      title: { label: '遮罩样式', tip: '遮罩样式' },
-      propType: 'object',
-    },
-    {
-      name: 'style',
-      title: {
-        label: '浮层样式',
-        tip: '可用于设置浮层的样式，调整浮层位置等',
-      },
-      propType: 'object',
-    },
+    // {
+    //   name: 'okType',
+    //   title: { label: '确认按钮类型', tip: '确认按钮类型' },
+    //   propType: { type: 'oneOf', value: ['default', 'small'] },
+    //   setter: {
+    //     componentName: 'SelectSetter',
+    //     props: {
+    //       options: [
+    //         {
+    //           title: 'primary',
+    //           value: 'primary'
+    //         },
+    //         {
+    //           title: 'ghost',
+    //           value: 'ghost'
+    //         },
+    //         {
+    //           title: 'dashed',
+    //           value: 'dashed'
+    //         },
+    //         {
+    //           title: 'link',
+    //           value: 'link'
+    //         },
+    //         {
+    //           title: 'text',
+    //           value: 'text'
+    //         },
+    //         {
+    //           title: 'default',
+    //           value: 'default'
+    //         }
+    //       ]
+    //     }
+    //   }
+    // },
+    // {
+    //   name: 'okButtonProps',
+    //   title: { label: '确认按钮props', tip: '确认按钮props' },
+    //   propType: 'object',
+    //   setter: {
+    //     componentName: 'ObjectSetter',
+    //     props: {
+    //       config: {
+    //         items: [
+    //           {
+    //             name: 'disabled',
+    //             title: { label: '是否禁用', tip: 'disabled' },
+    //             propType: 'bool',
+    //             setter: [
+    //               {
+    //                 componentName: 'BoolSetter',
+    //                 initialValue: false
+    //               },
+    //               'VariableSetter'
+    //             ],
+    //             isRequired: true
+    //           }
+    //         ]
+    //       }
+    //     }
+    //   }
+    // },
     {
       name: 'wrapClassName',
       title: { label: '外层容器类名', tip: '对话框外层容器的类名' },
       propType: 'string',
       setter: 'StringSetter',
-      supportVariable: true,
     },
     {
       name: 'getContainer',
@@ -213,7 +197,81 @@ export default {
         label: '指定挂载节点',
         tip: '指定 Modal 挂载的 HTML 节点, false 为挂载在当前 dom',
       },
-      propType: { type: 'oneOfType', value: ['node', 'func'] },
+      setter: ['FunctionSetter'],
+    },
+    {
+      name: 'operations',
+      title: { label: '操作项', tip: '操作项的配置描述，具体项见下表' },
+      setter: {
+        componentName: 'ArraySetter',
+        props: {
+          itemSetter: {
+            componentName: 'ObjectSetter',
+            props: {
+              config: {
+                items: [
+                  {
+                    name: 'content',
+                    title: { label: '文本', tip: 'content | 文本' },
+                    propType: 'string',
+                    setter: 'StringSetter',
+                    isRequired: true,
+                  },
+                  {
+                    name: 'action',
+                    title: { label: '操作', tip: 'action | 操作' },
+                    propType: 'string',
+                    setter: {
+                      componentName: 'SelectSetter',
+                      props: {
+                        options: [
+                          {
+                            title: '提交',
+                            value: 'submit',
+                          },
+                          {
+                            title: '取消',
+                            value: 'cancel',
+                          },
+                          {
+                            title: '自定义',
+                            value: 'custom',
+                          },
+                        ],
+                      },
+                    },
+                    isRequired: true,
+                  },
+                  {
+                    name: 'type',
+                    title: { label: '类型', tip: 'type | 按钮类型' },
+                    propType: {
+                      type: 'oneOf',
+                      value: ['primary', 'default'],
+                    },
+                    setter: {
+                      componentName: 'SelectSetter',
+                      props: {
+                        options: [
+                          {
+                            title: 'primary',
+                            value: 'primary',
+                          },
+                          {
+                            title: 'default',
+                            value: 'default',
+                          },
+                        ],
+                      },
+                    },
+                    isRequired: true,
+                  },
+                ],
+              },
+            },
+          },
+        },
+      },
     },
     {
       name: 'onCancel',
@@ -257,4 +315,9 @@ export default {
       ],
     },
   },
+};
+
+export default {
+  ...ProModalMeta,
+  snippets,
 };

@@ -1,3 +1,4 @@
+import ChoosePageSetter from '../_setters/choose-page-setter';
 import snippets from './snippets';
 
 export default {
@@ -64,7 +65,7 @@ export default {
             tip: 'href | 点击跳转的地址，指定此属性 button 的行为和 a 链接一致',
           },
           propType: 'string',
-          setter: ['StringSetter', 'VariableSetter'],
+          setter: ['PageSetter', 'StringSetter'],
         },
         {
           name: 'target',
@@ -292,7 +293,7 @@ export default {
         {
           name: 'onClick',
           template:
-            "onClick(event,${extParams}){\n// 点击按钮时的回调\nconsole.log('onClick', event);}",
+            "onClick(event,${extParams}){\n    // 点击按钮时的回调\n    console.log('onClick', event);\n  }\n",
         },
       ],
       style: true,

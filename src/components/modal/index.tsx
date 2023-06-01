@@ -1,18 +1,21 @@
-import React from 'react';
+import * as React from 'react';
 import { Modal as OriginalModal } from 'antd';
+import { BaseDialog } from '../../shared/base/BaseDialog';
 
-const Modal: any = (props: any) => {
-  const innerProps: any = {};
-  if (props.__designMode === 'design') {
-    // 低代码编辑态中强制显示，将控制权交给引擎侧
-    innerProps.open = true;
-  }
-  return <OriginalModal {...props} {...innerProps} />;
+interface IModalOperationProps {
+  content: string;
+  type: string;
+  action: string;
+}
+
+export type IModalProps = React.ComponentProps<typeof OriginalModal> & {
+  __designMode?: 'design';
+  operations?: IModalOperationProps[];
 };
-Modal.info = OriginalModal.info;
-Modal.success = OriginalModal.success;
-Modal.error = OriginalModal.error;
-Modal.warning = OriginalModal.warning;
-Modal.warn = OriginalModal.warn;
-Modal.confirm = OriginalModal.confirm;
-export default Modal;
+
+export default class Modal extends BaseDialog {
+  render() {
+    const innerProps = this.transformProps();
+    return <OriginalModal {...this.props} {...innerProps} onClose={innerProps.onCancel} />;
+  }
+}

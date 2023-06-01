@@ -1,12 +1,29 @@
-import React from 'react';
+import * as React from 'react';
 import { Drawer as OriginalDrawer } from 'antd';
+import { BaseDialog } from '../../shared/base/BaseDialog';
 
-const Drawer: any = (props: any) => {
-  const innerProps: any = {};
-  if (props.__designMode === 'design') {
-    // 低代码编辑态中强制显示，将控制权交给引擎侧
-    innerProps.open = true;
-  }
-  return <OriginalDrawer {...props} {...innerProps} />;
+export type IDrawerProps = React.ComponentProps<typeof OriginalDrawer> & {
+  __designMode?: 'design';
+  operations?: IModalOperationProps[];
 };
-export default Drawer;
+
+export interface IModalAction {
+  show: () => void;
+  hide: () => void;
+  hidden: () => void;
+}
+
+interface IModalOperationProps {
+  id: string;
+  content: string;
+  type: string;
+  action: string;
+}
+
+export default class Drawer extends BaseDialog {
+  render() {
+    const innerProps = this.transformProps();
+
+    return <OriginalDrawer {...this.props} {...innerProps} onClose={innerProps.onCancel} />;
+  }
+}

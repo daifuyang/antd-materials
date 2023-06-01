@@ -1,40 +1,34 @@
-export default [
+import { uuid } from '../utils';
+import { children } from './form-children';
+
+export const snippets = [
   {
-    title: '侧边抽屉',
+    title: '抽屉弹窗',
     screenshot: 'https://alifd.alicdn.com/fusion-cool/icons/icon-antd/drawer-1.png',
     schema: {
       componentName: 'Drawer',
+      title: '抽屉弹窗',
       props: {
-        title: 'Basic Drawer',
-        open: true,
+        title: '抽屉弹窗',
         placement: 'right',
         destroyOnClose: true,
+        width: 760,
+        operations: [
+          {
+            action: 'cancel',
+            type: 'normal',
+            content: '取消',
+            id: `operation_${uuid()}`,
+          },
+          {
+            action: 'submit',
+            type: 'primary',
+            content: '确认',
+            id: `operation_${uuid()}`,
+          },
+        ],
       },
-      children: [
-        {
-          componentName: 'Typography.Paragraph',
-          children: 'Some contents...',
-        },
-      ],
-    },
-  },
-  {
-    title: '底部抽屉',
-    screenshot: 'https://alifd.alicdn.com/fusion-cool/icons/icon-antd/drawer-2.png',
-    schema: {
-      componentName: 'Drawer',
-      props: {
-        title: 'Basic Drawer',
-        open: true,
-        placement: 'bottom',
-        destroyOnClose: true,
-      },
-      children: [
-        {
-          componentName: 'Typography.Paragraph',
-          children: 'Some contents...',
-        },
-      ],
+      children: [],
     },
   },
 ];

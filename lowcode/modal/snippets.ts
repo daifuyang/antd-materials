@@ -1,31 +1,27 @@
-export default [
+import { children } from '../pro-drawer/form-children';
+
+export const snippets = [
   {
-    title: '普通型',
+    title: '模态框',
     screenshot: 'https://alifd.alicdn.com/fusion-cool/icons/icon-antd/modal-1.png',
     schema: {
+      title: '模态框',
       componentName: 'Modal',
       props: {
-        title: 'Basic Modal',
-        okText: '确认',
-        cancelText: '取消',
-        open: true,
-        destroyOnClose: true,
-      },
-      children: [],
-    },
-  },
-  {
-    title: '隐藏底部',
-    screenshot: 'https://alifd.alicdn.com/fusion-cool/icons/icon-antd/modal-2.png',
-    schema: {
-      componentName: 'Modal',
-      props: {
-        title: 'Basic Modal',
-        okText: '确认',
-        cancelText: '取消',
-        open: true,
-        footer: null,
-        destroyOnClose: true,
+        title: '模态框',
+        width: 760,
+        operations: [
+          {
+            action: 'cancel',
+            type: 'normal',
+            content: '取消',
+          },
+          {
+            action: 'submit',
+            type: 'primary',
+            content: '确认',
+          },
+        ],
       },
       children: [],
     },

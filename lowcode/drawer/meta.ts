@@ -1,9 +1,13 @@
-import snippets from './snippets';
+import { snippets } from './snippets';
+import { uuid } from '../utils';
 
 export default {
   snippets,
   componentName: 'Drawer',
-  title: '抽屉',
+  title: '抽屉弹窗',
+  docUrl: '',
+  screenshot: '',
+  devMode: 'proCode',
   group: '基础组件',
   category: '反馈',
   props: [
@@ -13,8 +17,19 @@ export default {
       type: 'group',
       items: [
         {
-          name: 'open',
-          title: { label: '是否可见', tip: 'open | Drawer 是否可见' },
+          name: 'ref',
+          title: {
+            label: 'ref',
+            tip: "ref | 通过 this.$('xxx') 获取到组件实例",
+          },
+          defaultValue: () => {
+            return `pro_drawer_${uuid()}`;
+          },
+          setter: 'StringSetter',
+        },
+        {
+          name: 'visible',
+          title: { label: '是否可见', tip: 'visible | Drawer 是否可见' },
           propType: 'bool',
           setter: 'BoolSetter',
         },
@@ -244,6 +259,80 @@ export default {
       ],
     },
     {
+      name: 'operations',
+      title: { label: '操作项', tip: '操作项的配置描述，具体项见下表' },
+      setter: {
+        componentName: 'ArraySetter',
+        props: {
+          itemSetter: {
+            componentName: 'ObjectSetter',
+            props: {
+              config: {
+                items: [
+                  {
+                    name: 'content',
+                    title: { label: '文本', tip: 'content | 文本' },
+                    propType: 'string',
+                    setter: 'StringSetter',
+                    isRequired: true,
+                  },
+                  {
+                    name: 'action',
+                    title: { label: '操作', tip: 'action | 操作' },
+                    propType: 'string',
+                    setter: {
+                      componentName: 'SelectSetter',
+                      props: {
+                        options: [
+                          {
+                            title: '提交',
+                            value: 'submit',
+                          },
+                          {
+                            title: '取消',
+                            value: 'cancel',
+                          },
+                          {
+                            title: '自定义',
+                            value: 'custom',
+                          },
+                        ],
+                      },
+                    },
+                    isRequired: true,
+                  },
+                  {
+                    name: 'type',
+                    title: { label: '类型', tip: 'type | 按钮类型' },
+                    propType: {
+                      type: 'oneOf',
+                      value: ['primary', 'default'],
+                    },
+                    setter: {
+                      componentName: 'SelectSetter',
+                      props: {
+                        options: [
+                          {
+                            title: 'primary',
+                            value: 'primary',
+                          },
+                          {
+                            title: 'default',
+                            value: 'default',
+                          },
+                        ],
+                      },
+                    },
+                    isRequired: true,
+                  },
+                ],
+              },
+            },
+          },
+        },
+      },
+    },
+    {
       title: '其它',
       display: 'block',
       type: 'group',
@@ -390,19 +479,24 @@ export default {
       nestingRule: {
         parentWhitelist: ['Page', 'Component'],
       },
+      rootSelector: '.ant-drawer-content',
     },
     supports: {
       style: true,
       events: [
         {
-          name: 'onClose',
+          name: 'afterVisibleChange',
           template:
-            "onClose(event,${extParams}){\n// 点击遮罩层或右上角叉或取消按钮的回调\nconsole.log('onClose',event);}",
+            "afterVisibleChange(visible,${extParams}){\n// 切换抽屉时动画结束后的回调\nconsole.log('afterVisibleChange',visible);}",
         },
         {
-          name: 'afterOpenChange',
+          name: 'onCancel',
           template:
-            "afterOpenChange(open,${extParams}){\n// 切换抽屉时动画结束后的回调\nconsole.log('afterOpenChange',open);}",
+            "onCancel(${extParams}){\n// 点击遮罩层或右上角叉或取消按钮的回调\nconsole.log('onCancel');}",
+        },
+        {
+          name: 'onOk',
+          template: "onOk(${extParams}){\n// 点击确定回调\nconsole.log('onOk');}",
         },
       ],
     },

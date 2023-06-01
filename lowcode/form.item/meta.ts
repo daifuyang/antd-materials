@@ -1,3 +1,5 @@
+import ArraySetter from '../_setters/ArraySetter';
+import ObjectSetter from '../_setters/ObjectSetter';
 import snippets from './snippets';
 
 export default {
@@ -19,6 +21,11 @@ export default {
       name: 'label',
       title: { label: '标签', tip: '标签的文本' },
       propType: { type: 'oneOfType', value: ['string', 'node'] },
+    },
+    {
+      name: 'hidden',
+      title: { label: '隐藏字段', tip: '依然会收集和校验字段' },
+      setter: 'BoolSetter',
     },
     {
       name: 'labelAlign',
@@ -47,10 +54,8 @@ export default {
         label: '显示冒号',
         tip: '配合 label 属性使用，表示是否显示 label 后面的冒号',
       },
-      propType: 'bool',
       defaultValue: true,
       setter: 'BoolSetter',
-      supportVariable: true,
     },
     {
       name: 'extra',
@@ -68,27 +73,6 @@ export default {
       },
       propType: { type: 'oneOfType', value: ['string', 'node'] },
     },
-    {
-      name: 'required',
-      title: {
-        label: '必填标记',
-        tip: '必填样式设置。如不设置，则会根据校验规则自动生成',
-      },
-      propType: 'bool',
-      defaultValue: false,
-      setter: 'BoolSetter',
-      supportVariable: true,
-    },
-    // {
-    //   name: 'hasFeedback',
-    //   title: {
-    //     label: '校验状态图标',
-    //     tip:
-    //       '配合 validateStatus 属性使用，展示校验状态图标，建议只配合 Input 组件使用',
-    //   },
-    //   propType: 'bool',
-    //   defaultValue: false,
-    // },
     {
       name: 'initialValue',
       title: {
@@ -212,106 +196,143 @@ export default {
       ],
     },
     {
-      name: 'requiredobj',
-      title: { label: '必填设置', tip: '必填设置' },
-      propType: {
-        type: 'shape',
-        value: [
-          {
-            name: 'required',
-            title: '是否必填',
-            propType: 'bool',
-            setter: 'BoolSetter',
-            supportVariable: true,
-            extraProps: {
-              setValue(target: any, value: boolean) {
-                // 同步 必填标记
-                target.parent.parent.setPropValue('required', value);
-              },
-            },
-          },
-          {
-            name: 'message',
-            title: '错误信息提示',
-            propType: 'string',
-            setter: 'StringSetter',
-            supportVariable: true,
-          },
-        ],
-      },
-    },
-    {
-      name: 'typeobj',
-      title: { label: '输入类型设置', tip: '输入类型设置' },
-      propType: {
-        type: 'shape',
-        value: [
-          {
-            name: 'type',
-            title: '输入类型',
-            setter: {
-              componentName: 'SelectSetter',
-              props: {
-                options: [
+      name: 'rules',
+      title: { label: '校验规则', tip: '设置字段的校验逻辑' },
+      setter: {
+        componentName: 'ArraySetter',
+        props: {
+          itemSetter: {
+            componentName: 'ObjectSetter',
+            props: {
+              config: {
+                items: [
                   {
-                    title: '字符串',
-                    value: 'string',
-                  },
-                  // {
-                  //   title: '纯数字',
-                  //   value: 'number',
-                  // },
-                  {
-                    title: '邮箱',
-                    value: 'email',
+                    name: 'required',
+                    title: { label: '必填', tip: '是否为必选字段' },
+                    setter: 'BoolSetter',
+                    isRequired: true,
                   },
                   {
-                    title: '网址',
-                    value: 'url',
+                    name: 'type',
+                    title: '输入类型',
+                    extraProps: {
+                      // setValue: (target, value) => {
+                      //   const path = target.path.join('.');
+                      //   switch (value) {
+                      //     case 'string':
+                      //       break;
+                      //     case 'number':
+                      //       break;
+                      //     case 'email':
+                      //       break;
+                      //     case 'url':
+                      //       break;
+                      //     case 'regexp':
+                      //       break;
+                      //     default:
+                      //       break;
+                      //   }
+                      //   return target.getProps().setPropValue(path, value);
+                      // },
+                    },
+                    setter: {
+                      componentName: 'SelectSetter',
+                      initialValue: 'string',
+                      props: {
+                        options: [
+                          {
+                            title: '字符串',
+                            value: 'string',
+                          },
+                          {
+                            title: '纯数字',
+                            value: 'number',
+                          },
+                          {
+                            title: '邮箱',
+                            value: 'email',
+                          },
+                          {
+                            title: '网址',
+                            value: 'url',
+                          },
+                          {
+                            title: '正则',
+                            value: 'regexp',
+                          },
+                          /*                           {
+                            title: '自定义',
+                            value: 'validator',
+                          }, */
+                        ],
+                      },
+                    },
+                  },
+                  {
+                    name: 'max',
+                    title: {
+                      label: '最大值',
+                      tip: 'type：string 类型为字符串最大长度；number 类型时为最大值；array 类型时为数组最大长度',
+                    },
+                    setter: 'NumberSetter',
+                    condition: (target) => {
+                      const { path } = target;
+                      const name = `${path[0]}.${path[1]}.type`;
+                      return target.getProps().getPropValue(name) === 'number';
+                    },
+                  },
+                  {
+                    name: 'min',
+                    title: {
+                      label: '最小值',
+                      tip: 'type：string 类型为字符串最小长度；number 类型时为最小值；array 类型时为数组最小长度',
+                    },
+                    setter: 'NumberSetter',
+                    condition: (target) => {
+                      const { path } = target;
+                      const name = `${path[0]}.${path[1]}.type`;
+                      return target.getProps().getPropValue(name) === 'number';
+                    },
+                  },
+                  {
+                    name: 'pattern',
+                    title: {
+                      label: '正则表达式',
+                      tip: '正则表达式匹配',
+                    },
+                    condition: (target) => {
+                      const { path } = target;
+                      const name = `${path[0]}.${path[1]}.type`;
+                      return target.getProps().getPropValue(name) === 'regexp';
+                    },
+                    setter: 'StringSetter',
+                  },
+                  {
+                    name: 'validator',
+                    title: {
+                      label: '自定义校验函数',
+                      tip: '自定义校验，接收 Promise 作为返回值',
+                    },
+                    condition: (target) => {
+                      const { path } = target;
+                      const name = `${path[0]}.${path[1]}.type`;
+                      return target.getProps().getPropValue(name) === 'validator';
+                    },
+                    setter: 'FunctionSetter',
+                  },
+                  {
+                    name: 'message',
+                    title: '错误提示',
+                    propType: 'string',
+                    setter: 'StringSetter',
+                    isRequired: true,
                   },
                 ],
               },
             },
-            propType: {
-              type: 'oneOf',
-              value: ['string', 'number', 'email', 'url'],
-            },
           },
-          { name: 'message', title: '错误信息提示', propType: 'string' },
-        ],
+        },
       },
-    },
-    {
-      name: 'lenobj',
-      title: { label: '长度校验设置', tip: '长度校验设置' },
-      propType: {
-        type: 'shape',
-        value: [
-          // { name: 'len', title: '固定长度', propType: 'string' },
-          { name: 'max', title: '最大长度', propType: 'number' },
-          { name: 'min', title: '最小长度', propType: 'number' },
-          { name: 'message', title: '错误信息提示', propType: 'string' },
-        ],
-      },
-    },
-    {
-      name: 'patternobj',
-      title: { label: '正则设置', tip: '正则设置' },
-      propType: {
-        type: 'shape',
-        value: [
-          { name: 'pattern', title: '正则', propType: 'string' },
-          { name: 'message', title: '错误信息提示', propType: 'string' },
-        ],
-      },
-    },
-    {
-      name: 'validator',
-      title: {
-        label: '自定义校验函数',
-        tip: '自定义校验，接收 Promise 作为返回值',
-      },
-      propType: 'func',
     },
   ],
   configure: {

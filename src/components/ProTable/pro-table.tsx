@@ -2,11 +2,9 @@ import * as React from 'react';
 import { Component, createRef } from 'react';
 import { ProTable as OriginalProTable, ActionType, ProColumns } from '@ant-design/pro-components';
 
-import { Button, TablePaginationConfig, ConfigProvider } from 'antd';
+import { TablePaginationConfig, ConfigProvider, FormProps } from 'antd';
 import zhCNIntl from 'antd/es/locale/zh_CN';
 import enUSIntl from 'antd/es/locale/en_US';
-import { isPlainObj } from '../../shared/index';
-import { FormProps } from 'rc-field-form/lib/Form';
 
 interface IValueEnum {
   text: string;
@@ -36,7 +34,7 @@ class ProTable extends Component<IProTableProps, any> {
   componentDidMount() {}
 
   render() {
-    const { columns, intl, onValuesChange, toolbar } = this.props;
+    const { columns, intl, onValuesChange, toolbar, ...restProps } = this.props;
     const pagination = this.props.pagination as TablePaginationConfig;
 
     // current 让用户自己配置的话，用户需要自己监听 onChange 事件去修改，对低代码平台不友好
@@ -56,6 +54,7 @@ class ProTable extends Component<IProTableProps, any> {
           // formRef={this.formRef}
           form={{ onValuesChange }}
           toolbar={toolbar}
+          {...restProps}
         />
       </ConfigProvider>
     );

@@ -7,7 +7,13 @@ const Typography: any = function (props: any) {
 
 Typography.Title = OriginalTypography.Title;
 Typography.Text = OriginalTypography.Text;
-Typography.Link = OriginalTypography.Link;
+Typography.Link = function (props: any) {
+  let { href } = props;
+  if (props.__designMode === 'design') {
+    href = undefined;
+  }
+  return <OriginalTypography.Link {...props} href={href} />;
+};
 Typography.Paragraph = OriginalTypography.Paragraph;
 
 export default Typography;

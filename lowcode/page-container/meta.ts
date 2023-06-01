@@ -7,7 +7,7 @@ const Meta: ComponentMetadata = {
   docUrl: '',
   screenshot: '',
   devMode: 'proCode',
-  // group: '高级组件',
+  group: '高级组件',
   category: '布局',
   configure: {
     props: [
@@ -228,7 +228,6 @@ const Meta: ComponentMetadata = {
                   name: 'breadcrumb',
                   title: { label: '面包屑的配置', tip: '面包屑的配置' },
                   propType: 'object',
-                  supportVariable: false,
                   setter: [
                     {
                       componentName: 'ObjectSetter',

@@ -34,7 +34,8 @@
   "dependencies": {
     "@alifd/next": "^1.25.27",
     "@ant-design/pro-components": "^2.4.16",
-    "antd": "4.24.10",
+    "@tinymce/tinymce-react": "^4.3.0",
+    "antd": "^4.24.10",
     "react": "^16.x",
     "react-dom": "^16.x"
   },
@@ -55,7 +56,7 @@
     "react-dom": "^16.x"
   },
   "componentConfig": {
-    "materialSchema": "https://unpkg.com/@seada/antd-materials@1.0.0-rc.27/build/lowcode/assets-prod.json"
+    "materialSchema": "https://unpkg.com/antd-materials@0.1.0/build/lowcode/assets-prod.json"
   },
   "license": "MIT",
   "homepage": "https://unpkg.com/antd-materials@0.1.0/build/index.html"
